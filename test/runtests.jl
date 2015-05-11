@@ -1,20 +1,20 @@
-using RecurrentNN
-reload("RecurrentNN.jl")
+using NNGraph
+reload("NNGraph.jl")
 using Base.Test
 
 # graph output test
-m1 = RecurrentNN.NNMatrix(3,2)
+m1 = NNGraph.NNMatrix(3,2)
 m1.w[1,1] = 1.; m1.w[1,2] = 2.
 m1.w[2,1] = 3.; m1.w[2,2] = 4.
 m1.w[3,1] = 5.; m1.w[3,2] = 6.
 
-m2 = RecurrentNN.NNMatrix(2,3)
+m2 = NNGraph.NNMatrix(2,3)
 m2.w[1,1] = 2.; m2.w[1,2] = 3.; m2.w[1,3] = 4.
 m2.w[2,1] = 5.; m2.w[2,2] = 6.; m2.w[2,3] = 7.
 
 # add test
-g =  RecurrentNN.Graph()
-m3 = RecurrentNN.add(g,m1,m1)
+g =  NNGraph.Graph()
+m3 = NNGraph.add(g,m1,m1)
 m3.dw[1,1] = .1; m3.dw[1,2] = .2
 m3.dw[2,1] = .3; m3.dw[2,2] = .4
 m3.dw[3,1] = .5; m3.dw[3,2] = .6
@@ -31,8 +31,8 @@ g.backprop[1]()
 # mul test
 m1.dw[:] = 0. # reset gradient matrices
 m2.dw[:] = 0. # reset  gradient matrices
-g =  RecurrentNN.Graph()
-m3 = RecurrentNN.mul(g,m1,m2)
+g =  NNGraph.Graph()
+m3 = NNGraph.mul(g,m1,m2)
 @test m3.w[1,1] == 12.
 @test m3.w[1,2] == 15.
 @test m3.w[1,3] == 18.
@@ -66,12 +66,12 @@ g.backprop[1]()
 
 
 # reul() tests
-m4 = RecurrentNN.NNMatrix(3,2)
+m4 = NNGraph.NNMatrix(3,2)
 m4.w[1,1] = 1.; m4.w[1,2] =-2.
 m4.w[2,1] =-3.; m4.w[2,2] = 4.
 m4.w[3,1] = 5.; m4.w[3,2] =-6.
-g =  RecurrentNN.Graph()
-m5 = RecurrentNN.relu(g,m4)
+g =  NNGraph.Graph()
+m5 = NNGraph.relu(g,m4)
 @test m5.w[1,1] == 1.
 @test m5.w[1,2] == 0.
 @test m5.w[2,1] == 0.
@@ -93,13 +93,13 @@ g.backprop[1]()
 
 
 # rowpluck() tests
-m4 = RecurrentNN.NNMatrix(3,2)
+m4 = NNGraph.NNMatrix(3,2)
 m4.w[1,1] = 1.; m4.w[1,2] =-2.
 m4.w[2,1] =-3.; m4.w[2,2] = 4.
 m4.w[3,1] = 5.; m4.w[3,2] =-6.
 
-g =  RecurrentNN.Graph()
-m5 = RecurrentNN.rowpluck(g,m4,2)
+g =  NNGraph.Graph()
+m5 = NNGraph.rowpluck(g,m4,2)
 @test m5.w[1,1] == -3.
 @test m5.w[2,1] == 4.
 
@@ -115,9 +115,9 @@ m4.dw
 
 
 # softmax tests
-m6 = RecurrentNN.NNMatrix(5,1)
+m6 = NNGraph.NNMatrix(5,1)
 m6.w[1,1] = 0.3; m6.w[2,1] =0.1; m6.w[3,1] =0.6; m6.w[4,1] = 0.002; m6.w[5,1] = 0.00001
-sm = RecurrentNN.softmax(m6)
+sm = NNGraph.softmax(m6)
 # @test_approx_eq
 @test_approx_eq sm.w[1,1] 0.21494050089813527
 @test_approx_eq sm.w[2,1] 0.17597839816728894
