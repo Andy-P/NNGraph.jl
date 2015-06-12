@@ -38,7 +38,7 @@ end
 
 function sigmoid(g::Graph, m::NNMatrix)
     out = NNMatrix(m.n, m.d,
-            [1.0 / (1.0 + exp(-m.w[i,j])) for i in 1:m.n, j in m.d],
+            [1.0 / (1.0 + exp(-m.w[i,j])) for i in 1:m.n, j in 1:m.d],
             zeros(m.n, m.d))
     if g.doBackprop
         push!(g.backprop,
@@ -100,6 +100,7 @@ function add(g::Graph, m1::NNMatrix, m2::NNMatrix)
 end
 
 function eltmul(g::Graph, m1::NNMatrix, m2::NNMatrix) # element-wise multiplication
+
     out = NNMatrix(m1.n, m2.d, m1.w .* m2.w, zeros(m1.n, m2.d))
     if g.doBackprop
         push!(g.backprop,
@@ -108,8 +109,23 @@ function eltmul(g::Graph, m1::NNMatrix, m2::NNMatrix) # element-wise multiplicat
                   m1.dw[i,j] += m2.w[i,j] * out.dw[i,j]
                   m2.dw[i,j] += m1.w[i,j] * out.dw[i,j]
                 end
-              end )
-        end
+            end )
+    end
     return out
 end
 
+function dot(g::Graph, m1::NNMatrix, m2::NNMatrix)
+
+    out = NNMatrix(1, 1, zeros(1,1), zeros(1,1))
+    out.w[1,1] = dot(m1.w, m2.w)
+    if g.doBackprop
+        push!(g.backprop,
+            function ()
+                @inbounds for j in 1:m1.d, i in 1:m1.n
+                    m1.dw[i,j] += m2.w[i,j] * out.dw[1,1]
+                    m2.dw[i,j] += m1.w[i,j] * out.dw[1,1]
+                end
+            end )
+    end
+    return out
+end

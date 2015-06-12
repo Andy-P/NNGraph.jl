@@ -1,5 +1,5 @@
 using NNGraph
-reload("NNGraph.jl")
+# reload("NNGraph.jl")
 using Base.Test
 
 # graph output test
@@ -113,14 +113,13 @@ m4.dw
 @test m4.dw[3,1] == 0.
 @test m4.dw[3,2] == 0.
 
-
 # softmax tests
 m6 = NNGraph.NNMatrix(5,1)
 m6.w[1,1] = 0.3; m6.w[2,1] =0.1; m6.w[3,1] =0.6; m6.w[4,1] = 0.002; m6.w[5,1] = 0.00001
 sm = NNGraph.softmax(m6)
-# @test_approx_eq
-@test_approx_eq sm.w[1,1] 0.21494050089813527
-@test_approx_eq sm.w[2,1] 0.17597839816728894
-@test_approx_eq sm.w[3,1] 0.2901393282421457
-@test_approx_eq sm.w[4,1] 0.1595506217827435
-@test_approx_eq sm.w[5,1] 0.15939115090968653
+@test_approx_eq_eps sm.w[1,1] 0.2149744 1e7
+@test_approx_eq_eps sm.w[2,1] 0.1759805 1e7
+@test_approx_eq_eps sm.w[3,1] 0.2901595 1e7
+@test_approx_eq_eps sm.w[4,1] 0.1595501 1e7
+@test_approx_eq_eps sm.w[5,1] 0.1592329 1e7
+

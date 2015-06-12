@@ -5,15 +5,12 @@ type Solver
    Solver() = new(0.999, 1e-8, Array(NNMatrix,0))
 end
 
-function step(solver::Solver, model::Model, stepsize::Float64, regc::Float64, clipval::Float64)
+function step(solver::Solver, modelMatices::Array{NNMatrix,1}, stepsize::Float64, regc::Float64, clipval::Float64)
 
     # perform parameter update
     solverstats = Array(Float64,0)
     numclipped = 0
     numtot = 0
-
-    # All of the matrices used by the model
-    modelMatices = model.matrices
 
     # init stepcache if needed
     if length(solver.stepcache) == 0
