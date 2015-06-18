@@ -15,6 +15,14 @@ m2.w[2,1] = 5.; m2.w[2,2] = 6.; m2.w[2,3] = 7.
 # add test
 g =  NNGraph.Graph()
 m3 = NNGraph.add(g,m1,m1)
+# size tests
+@test m3.n == m1.n
+@test m3.d == m1.d
+@test size(m3.w,1) == m1.n
+@test size(m3.w,2) == m1.d
+@test size(m3.dw,1) == m1.n
+@test size(m3.dw,2) == m1.d
+
 m3.dw[1,1] = .1; m3.dw[1,2] = .2
 m3.dw[2,1] = .3; m3.dw[2,2] = .4
 m3.dw[3,1] = .5; m3.dw[3,2] = .6
@@ -29,10 +37,16 @@ g.backprop[1]()
 @test m1.dw[3,2] == 1.2
 
 # mul test
-m1.dw[:] = 0. # reset gradient matrices
-m2.dw[:] = 0. # reset  gradient matrices
+m1.dw[:] = 0. # reset gradient matrices for next tests
+m2.dw[:] = 0. # reset  gradient matrices for next tests
 g =  NNGraph.Graph()
 m3 = NNGraph.mul(g,m1,m2)
+# size tests
+@test m3.n == m1.n
+@test m3.d == m2.d
+@test size(m3.dw,1) == m1.n
+@test size(m3.dw,2) == m2.d
+
 @test m3.w[1,1] == 12.
 @test m3.w[1,2] == 15.
 @test m3.w[1,3] == 18.
@@ -72,6 +86,13 @@ m4.w[2,1] =-3.; m4.w[2,2] = 4.
 m4.w[3,1] = 5.; m4.w[3,2] =-6.
 g =  NNGraph.Graph()
 m5 = NNGraph.relu(g,m4)
+
+# size tests
+@test m5.n == m4.n
+@test m5.d == m4.d
+@test size(m5.dw,1) == m5.n
+@test size(m5.dw,2) == m5.d
+
 @test m5.w[1,1] == 1.
 @test m5.w[1,2] == 0.
 @test m5.w[2,1] == 0.
