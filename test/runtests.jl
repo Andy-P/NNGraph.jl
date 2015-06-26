@@ -64,19 +64,21 @@ g.backprop[1]()
 
 # m1 gradient tests
 @test m1.dw[1,1] == 2.
-@test m1.dw[1,2] == 3.8000000000000003
-@test m1.dw[2,1] == 4.699999999999999
-@test m1.dw[2,2] == 9.2
-@test m1.dw[3,1] == 7.4
-@test m1.dw[3,2] == 14.600000000000001
+@test_approx_eq_eps m1.dw[1,1] 2.0 1e10
+@test_approx_eq_eps m1.dw[1,2] 3.8 1e10
+@test_approx_eq_eps m1.dw[2,1] 4.69 1e10
+@test_approx_eq_eps m1.dw[2,2] 9.2 1e10
+@test_approx_eq_eps m1.dw[3,1] 7.4 1e10
+@test_approx_eq_eps m1.dw[3,2] 14.6 1e10
 
 # m2 gradient tests
-@test m2.dw[1,1] == 4.800000000000001
-@test m2.dw[1,2] == 5.7
-@test m2.dw[1,3] == 6.6
-@test m2.dw[2,1] == 5.999999999999999
-@test m2.dw[2,2] == 7.200000000000001
-@test m2.dw[2,3] == 8.4
+
+@test_approx_eq_eps m2.dw[1,1] 4.8 1e10
+@test_approx_eq_eps m2.dw[1,2] 5.7 1e10
+@test_approx_eq_eps m2.dw[1,3] 6.6 1e10
+@test_approx_eq_eps m2.dw[2,1] 5.9 1e10
+@test_approx_eq_eps m2.dw[2,2] 7.2 1e10
+@test_approx_eq_eps m2.dw[2,3] 8.4 1e10
 
 
 # reul() tests
@@ -143,4 +145,3 @@ sm = NNGraph.softmax(m6)
 @test_approx_eq_eps sm.w[3,1] 0.2901595 1e7
 @test_approx_eq_eps sm.w[4,1] 0.1595501 1e7
 @test_approx_eq_eps sm.w[5,1] 0.1592329 1e7
-
