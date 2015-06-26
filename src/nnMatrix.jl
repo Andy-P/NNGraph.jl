@@ -9,6 +9,7 @@ type NNMatrix # Neural net layer's weights & gradients
     NNMatrix(n::Int, d::Int) = new(n, d, zeros(n,d), zeros(n,d), zeros(0,0))
     NNMatrix(n::Int, d::Int, w::Matrix, dw::Matrix) = new(n, d, w, dw, zeros(0,0))
     NNMatrix(n::Int, d::Int, w::Matrix, dw::Matrix, rnd::Matrix) = new(n, d, w, dw, rnd)
+    NNMatrix(w::Matrix) = new(size(w,1), size(w,2), w, zeros(size(w,1),size(w,2)), zeros(0,0))
 end
 
 randNNMat(n::Int, d::Int, std::FloatingPoint=1.) = NNMatrix(n, d, randn(n,d)*std, zeros(n,d))
