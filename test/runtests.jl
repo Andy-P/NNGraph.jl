@@ -1,8 +1,8 @@
 using NNGraph
-# reload("NNGraph.jl")
+reload("NNGraph.jl")
 using Base.Test
 
-# graph output test
+# graph output test setup
 m1 = NNGraph.NNMatrix(3,2)
 m1.w[1,1] = 1.; m1.w[1,2] = 2.
 m1.w[2,1] = 3.; m1.w[2,2] = 4.
@@ -15,6 +15,7 @@ m2.w[2,1] = 5.; m2.w[2,2] = 6.; m2.w[2,3] = 7.
 # add test
 g =  NNGraph.Graph()
 m3 = NNGraph.add(g,m1,m1)
+
 # size tests
 @test m3.n == m1.n
 @test m3.d == m1.d
@@ -22,6 +23,15 @@ m3 = NNGraph.add(g,m1,m1)
 @test size(m3.w,2) == m1.d
 @test size(m3.dw,1) == m1.n
 @test size(m3.dw,2) == m1.d
+
+# forward test
+@test m3.w[1,1] == m1.w[1,1] * 2
+@test m3.w[2,1] == m1.w[2,1] * 2
+@test m3.w[3,1] == m1.w[3,1] * 2
+@test m3.w[1,2] == m1.w[1,2] * 2
+@test m3.w[2,2] == m1.w[2,2] * 2
+@test m3.w[3,2] == m1.w[3,2] * 2
+
 
 m3.dw[1,1] = .1; m3.dw[1,2] = .2
 m3.dw[2,1] = .3; m3.dw[2,2] = .4
@@ -47,6 +57,7 @@ m3 = NNGraph.mul(g,m1,m2)
 @test size(m3.dw,1) == m1.n
 @test size(m3.dw,2) == m2.d
 
+# forward tests
 @test m3.w[1,1] == 12.
 @test m3.w[1,2] == 15.
 @test m3.w[1,3] == 18.
@@ -62,7 +73,7 @@ m3.dw[2,1] = .4; m3.dw[2,2] = .5; m3.dw[2,3] = .6
 m3.dw[3,1] = .7; m3.dw[3,2] = .8; m3.dw[3,3] = .9
 g.backprop[1]()
 
-# m1 gradient tests
+# mul() m1 gradient tests
 @test m1.dw[1,1] == 2.
 @test_approx_eq_eps m1.dw[1,1] 2.0 1e10
 @test_approx_eq_eps m1.dw[1,2] 3.8 1e10
@@ -71,15 +82,13 @@ g.backprop[1]()
 @test_approx_eq_eps m1.dw[3,1] 7.4 1e10
 @test_approx_eq_eps m1.dw[3,2] 14.6 1e10
 
-# m2 gradient tests
-
+# mul() m2 gradient tests
 @test_approx_eq_eps m2.dw[1,1] 4.8 1e10
 @test_approx_eq_eps m2.dw[1,2] 5.7 1e10
 @test_approx_eq_eps m2.dw[1,3] 6.6 1e10
 @test_approx_eq_eps m2.dw[2,1] 5.9 1e10
 @test_approx_eq_eps m2.dw[2,2] 7.2 1e10
 @test_approx_eq_eps m2.dw[2,3] 8.4 1e10
-
 
 # reul() tests
 m4 = NNGraph.NNMatrix(3,2)
@@ -145,3 +154,10 @@ sm = NNGraph.softmax(m6)
 @test_approx_eq_eps sm.w[3,1] 0.2901595 1e7
 @test_approx_eq_eps sm.w[4,1] 0.1595501 1e7
 @test_approx_eq_eps sm.w[5,1] 0.1592329 1e7
+
+# tahn() test
+
+
+# sigmoid() test
+
+

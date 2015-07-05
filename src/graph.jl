@@ -104,7 +104,6 @@ function mul(g::Graph, m1::NNMatrix, m2::NNMatrix)
                     b = out.dw[i,j]
                     for k = 1:m1.d
                         m1.dw[i,k] += m2.w[k,j] * b
-
                         m2.dw[k,j] += m1.w[i,k] * b
                     end
                 end
@@ -127,6 +126,7 @@ end
 function add(g::Graph, ms::NNMatrix...)
     out = NNMatrix(ms[1].n, ms[1].d, zeros(ms[1].n, ms[1].d), zeros(ms[1].n, ms[1].d))
     @inbounds for m in ms
+        @assert out.n == m.n && out.d==m.d
         @inbounds for j in 1:m.d, i in 1:m.n
             out.w[i,j] += m.w[i,j]
         end
