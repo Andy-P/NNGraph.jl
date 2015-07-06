@@ -18,6 +18,6 @@ To construct and train an LSTM for example, you would proceed as follows:
 Will added soon ...
 ```
 ## Credits
-NNGraph.jl is based on a portion Andrej Karpathy's excellent [RecurrentJS](http://cs.stanford.edu/people/karpathy/recurrentjs) library in javascript. 
+NNGraph.jl is based on a portion Andrej Karpathy's excellent [RecurrentJS](http://cs.stanford.edu/people/karpathy/recurrentjs) library in javascript.  Speed enhancements were added by [Iain Dunning](https://github.com/IainNZ).
 ## License
 MIT
