@@ -1,6 +1,6 @@
 using NNGraph
-reload("NNGraph.jl")
-using Base.Test
+# reload("NNGraph.jl")
+using Base.Test, Base.tanh
 
 # graph output test setup
 m1 = NNGraph.NNMatrix(3,2)
@@ -156,8 +156,67 @@ sm = NNGraph.softmax(m6)
 @test_approx_eq_eps sm.w[5,1] 0.1592329 1e7
 
 # tahn() test
+g = NNGraph.Graph()
+m3 = NNGraph.tanh(g,m1)
+# size tests
+@test m3.n == m1.n
+@test m3.d == m1.d
+@test size(m3.w,1) == m1.n
+@test size(m3.w,2) == m1.d
+@test size(m3.dw,1) == m1.n
+@test size(m3.dw,2) == m1.d
 
+# forward tahn tests
+@test m3.w[1,1] == tanh(m1.w[1,1])
+@test m3.w[1,2] == tanh(m1.w[1,2])
+@test m3.w[2,1] == tanh(m1.w[2,1])
+@test m3.w[2,2] == tanh(m1.w[2,2])
+@test m3.w[3,1] == tanh(m1.w[3,1])
+@test m3.w[3,2] == tanh(m1.w[3,2])
+
+# reset gradients then run backprop
+m3.dw = ones(size(m3.dw)) * .5
+m1.dw = zeros(size(m1.dw))
+backprop(g)
+
+# backward tahn tests
+@test m1.dw[1,1] == (1.-tanh(m1.w[1,1])^2) *.5
+@test m1.dw[1,2] == (1.-tanh(m1.w[1,2])^2) *.5
+@test m1.dw[2,1] == (1.-tanh(m1.w[2,1])^2) *.5
+@test m1.dw[2,2] == (1.-tanh(m1.w[2,2])^2) *.5
+@test m1.dw[3,1] == (1.-tanh(m1.w[3,1])^2) *.5
+@test m1.dw[3,2] == (1.-tanh(m1.w[3,2])^2) *.5
 
 # sigmoid() test
+g = NNGraph.Graph()
+m3 = NNGraph.sigmoid(g,m1)
+# size tests
+@test m3.n == m1.n
+@test m3.d == m1.d
+@test size(m3.w,1) == m1.n
+@test size(m3.w,2) == m1.d
+@test size(m3.dw,1) == m1.n
+@test size(m3.dw,2) == m1.d
 
+# forward sigmoid tests
+sig(x) = 1.0 / (1.0 + exp(-x))
+@test m3.w[1,1] == sig(m1.w[1,1])
+@test m3.w[1,2] == sig(m1.w[1,2])
+@test m3.w[2,1] == sig(m1.w[2,1])
+@test m3.w[2,2] == sig(m1.w[2,2])
+@test m3.w[3,1] == sig(m1.w[3,1])
+@test m3.w[3,2] == sig(m1.w[3,2])
+
+# reset gradients then run backprop
+m3.dw = ones(size(m3.dw)) * .5
+m1.dw = zeros(size(m1.dw))
+backprop(g)
+
+# backward sigmoid tests
+@test m1.dw[1,1] == sig(m1.w[1,1]) * (1.-sig(m1.w[1,1])) *.5
+@test m1.dw[1,2] == sig(m1.w[1,2]) * (1.-sig(m1.w[1,2])) *.5
+@test m1.dw[2,1] == sig(m1.w[2,1]) * (1.-sig(m1.w[2,1])) *.5
+@test m1.dw[2,2] == sig(m1.w[2,2]) * (1.-sig(m1.w[2,2])) *.5
+@test m1.dw[3,1] == sig(m1.w[3,1]) * (1.-sig(m1.w[3,1])) *.5
+@test m1.dw[3,2] == sig(m1.w[3,2]) * (1.-sig(m1.w[3,2])) *.5
 
