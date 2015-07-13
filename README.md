@@ -1,6 +1,6 @@
 # NNGraph.jl
 
-NNGraph.jl is a Julia language package with functionality to construct arbitrary **expression graphs** over which the library can perform **automatic differentiation** similar to what you may find in Theano for Python, or in Torch etc. It is useful for creating arbitrary neural networks.
+NNGraph.jl is a Julia language package with functionality to construct arbitrary **expression graphs** over which the library can perform **automatic differentiation** similar to what you may find in Theano for Python, or in Torch etc. It is useful for creating arbitrary neural networks and was developed with a focus on enabling fast experimentation.
 
 ## Example code
 
